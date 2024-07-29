@@ -3,12 +3,7 @@
 
 \listfiles
 
-\graphicspath{
-{./}
-{./LTR-0070/}
-{./VEC-0060/}
-{./APP-0020/}
-}
+\graphicspath{{./}{firstExample/}{secondExample/}}
 
 \usepackage{tikz}
 \usepackage{tkz-euclide}
@@ -26,15 +21,7 @@
 \newcommand{\dotp}{\cdot}
 \newcommand{\id}{\text{id}}
 \newcommand\norm[1]{\left\lVert#1\right\rVert}
-
-%\newcommand{\desmosThreeD}[3]{Desmos link: \url{https://www.desmos.com/3d/#1}}
-
-%\renewcommand{\desmosThreeD}[3]{\HCode{<iframe src="https://www.desmos.com/3d/#1" width="100\%" height="#3px" frameborder=0>This browser does not support embedded elements.</iframe>}}
-
-\newcounter{unnumbered}
-\renewcommand{\theunnumbered}{}  % Redefine the counter representation to be empty
-
-\newtheorem*{bookSection}{}
+ 
 \newtheorem{general}{Generalization}
 \newtheorem{initprob}{Exploration Problem}
 
