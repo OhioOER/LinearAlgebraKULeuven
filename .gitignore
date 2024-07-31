@@ -11,6 +11,7 @@
 *.cb
 *.cb2
 .*.lb
+*.DS_Store
 
 ## Intermediate documents:
 *.dvi
@@ -292,7 +293,7 @@ metadata.json
 *.tmp
 # multiwrite latex
 *.mw
-.vscode
+# .vscode
 .gpg
 ximera-downloads
 .gpgkey
@@ -300,4 +301,3 @@ gpgkey
 .ximeraserve
 
 *.xbb
-
