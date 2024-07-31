@@ -1,0 +1,100 @@
+# use xake image
+image: ghcr.io/ximeraproject/xake2019:v2.1.1
+#image: registry-ext.repo.icts.kuleuven.be/set/dsb/xake:1.2.1
+
+variables:
+  NB_JOBS: 4                                           # Degree of parallelism  (used by xmlatex)
+  REPO_BASE: "linearalgebra"                              # Name under which this repo is to be published
+  REPO_XIMERA: 'linearalgebra'                                  # will be set/overwritten infra!
+  URL_XIMERA: "https://set.kuleuven.be/voorkennis/"    # ximeraServer on which to publish 
+
+stages:
+  - build
+  - deploy
+  - deploy-prod
+
+build_pdf_job:
+  stage: build
+  script:
+      # - xmlatex cleanhandout
+      # - xmlatex cleanstandaard
+      - xmlatex -d bakehandout
+      - xmlatex -d bakestandaard
+  cache: 
+    untracked: true    # Cache also untracked, i.e. generated files
+    key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+  only:
+    - branches
+  artifacts:
+    paths:
+      - "ximera-downloads"
+
+build_xake_job:
+  stage: build
+  script:
+      - BRANCHPART=`echo "*$CI_COMMIT_REF_NAME" | tr '[:upper:]' '[:lower:]'` # Add star and lowercase
+      - REPO_XIMERA=$REPO_BASE""$BRANCHPART 
+      - rm -rf ximera-downloads    # from cache ???
+      - find . -name '*.png' -size 0 -print -delete
+      - find . -name '*.svg' -size 0 -print -delete
+      # Only with xake > 2.1.1
+      - type xmlatex
+      - ls -al /root/texmf/tex/latex/ximeraLatex/
+      - xmlatex -d bake
+      # - xmlatex -d bake || echo NOK    # optional: do not fail this step when bake fails ...
+  cache:
+    untracked: true
+    key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
+  artifacts: # Also save untracked files
+    untracked: true
+    expire_in: '23h20min' # to be checked
+
+deploy_job-latest:
+  stage: deploy-prod
+  variables:
+    URL_XIMERA: "https://set-p-dsb-zomercursus-latest.cloud-ext.icts.kuleuven.be/"    # only for tests ...
+  script:
+      - BRANCHPART=`echo "*$CI_COMMIT_REF_NAME" | tr '[:upper:]' '[:lower:]'` # Add star and lowercase
+      - REPO_XIMERA=$REPO_BASE""$BRANCHPART 
+      - git fetch --unshallow # NODIG: anders POST /cena*master.git/git-receive-pack HTTP/1.1" 500  en 
+                              # error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500 Internal Server Error
+      - git config core.fileMode false
+      - git branch -D master || true    #ignore error
+      - git checkout -B master # pretend we're on 'master' (needed for xake :-( )
+      - xmlatex serve
+  artifacts: 
+    untracked: true
+  allow_failure: false
+  when: manual    
+
+deploy_job:
+  stage: deploy
+  script:
+      - BRANCHPART=`echo "*$CI_COMMIT_REF_NAME" | tr '[:upper:]' '[:lower:]'` # Add star and lowercase
+      - REPO_XIMERA=$REPO_BASE""$BRANCHPART 
+      - git fetch --unshallow # NODIG: anders POST /cena*master.git/git-receive-pack HTTP/1.1" 500  en 
+                              # error: RPC failed; HTTP 500 curl 22 The requested URL returned error: 500 Internal Server Error
+      - git config core.fileMode false
+      - git branch -D master || true    # ignore error
+      - git checkout -B master          # pretend we're on 'master' (needed for xake :-( ))
+      - xmlatex serve
+  artifacts:
+    untracked: true
+#    expire_in: '24h20min' # laat ze niet oneindig lang staan op de gitlab server
+  allow_failure: false
+
+deploy_job_prod:
+  stage: deploy-prod
+  script:
+      - REPO_XIMERA=$REPO_BASE 
+      - git fetch --unshallow # 
+      - git config core.fileMode false
+      - git branch -D master || true    #ignore error
+      - git checkout -B master # doe alsof we op master zitten  (nodig voor xake :-( )      
+      - xmlatex serve
+  artifacts:
+    untracked: true
+    expire_in: '24h20min'
+  allow_failure: false
+  when: manual
+
