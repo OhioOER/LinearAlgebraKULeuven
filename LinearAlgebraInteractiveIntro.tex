@@ -1,6 +1,8 @@
 \documentclass[10pt,handout,twoside]{xourse}
 
 \input{preamble.tex}
+\input{KUStyle/preamble.tex}
+\addPrintStyle{./KUStyle}
 
 %\pdfOnly{\usepackage{printStyles/lulu1}}
 
@@ -12,12 +14,16 @@
 
 \setcounter{tocdepth}{2}
 
+\part{Intro}
+\chapterstyle
+
 %% Front Matter
 \activity{ABOUT/main.tex} 
 %\activity{TBLCONT/main.tex} 
 \activity{toInstructor/main.tex} 
 \activity{HowToUse/main.tex} 
 
+\part{Preliminaries}
 %% Preliminaries
 \chapterstyle
 \activity{XLAChapter_prelim/main.tex}
@@ -34,6 +40,8 @@
 \activity{VEC-0080/main.tex}  
 \activity{RRN-0020/main.tex}  
 \activity{RRN-0030/main.tex}  
+
+\part{Linear Algebra}
 
 %% Systems of Linear Equations
 \chapterstyle
