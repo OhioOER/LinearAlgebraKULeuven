@@ -40,8 +40,8 @@ build_xake_job:
       # Only with xake > 2.1.1
       - type xmlatex
       - ls -al /root/texmf/tex/latex/ximeraLatex/
-      - xmlatex -d bake
-      # - xmlatex -d bake || echo NOK    # optional: do not fail this step when bake fails ...
+      # - xmlatex -d bake
+      - xmlatex -d bake || echo NOK    # optional: do not fail this step when bake fails ...
   cache:
     untracked: true
     key: "$CI_JOB_STAGE-$CI_COMMIT_REF_SLUG"
