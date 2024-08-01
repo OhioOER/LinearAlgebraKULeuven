@@ -930,7 +930,15 @@ span.xmqa1 {
 .explanation::before {
 	content: "explanation" attr(numbered) ".";
 }
-
+.exploration::before {
+	content: "exploration" attr(numbered) ".";
+}
+.formula::before {
+	content: "formula" attr(numbered) ".";
+}
+.problem::before {
+	content: "problem" attr(numbered) ".";
+}
 
 .explanation, .explanation-content {
     --pba: var(--explanation-background-perc);
