@@ -94,8 +94,10 @@
 
 %% TERRIBLE HACK: for unknown reason \RR (in fact \mathbb ...) HANGS compilation when used in a \title  (7/2024)
 \renewcommand{\title}[1]{
-  \renewcommand{\RR}{R}
+{ % limit renewcommand to inside \title!!!
+ \renewcommand{\RR}{R}
   \othertitle{#1}
+}
 }
 
 % % Redefine maketitle to give course packet title page and toc.
