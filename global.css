@@ -544,8 +544,13 @@ Fix proof spacing
     font-weight: bold;
 }
 
+
+.card.activity-card .card-number {
+	display: none;
+}
+
 /* default card background */
-.card.activity-card {
+.toc .card.activity-card {
 	/* background-color: #fff; */
 	background-color: rgba(31, 171, 213, 0.2509803922);
 }
