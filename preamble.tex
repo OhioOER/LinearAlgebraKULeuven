@@ -3,7 +3,7 @@
 
 \listfiles
 
-\graphicspath{{./}{firstExample/}{secondExample/}}
+\graphicspath{{./}{firstExample/}{secondExample/}{./pictures/}}
 
 \usepackage{tikz}
 \usepackage{tkz-euclide}
@@ -12,7 +12,7 @@
 \usetikzlibrary{shapes.geometric}
 \usetikzlibrary{arrows}
 %\usetkzobj{all}
-\pgfplotsset{compat=1.13} % prevents compile error.
+% \pgfplotsset{compat=1.13} % prevents compile error.
 
 %\renewcommand{\vec}[1]{\mathbf{#1}}
 \renewcommand{\vec}{\mathbf}
@@ -32,3 +32,44 @@
 
 
 \usepackage{mathtools}
+
+\def\xmbaseurl{https://set.kuleuven.be/voorkennis/linearalgebra/}
+% \def\xmbaseurl{https://ximera.osu.edu/oerlinalg/linearalgebra/}
+
+% HACK: use 'oplossing-code' for 'explanation' ...
+\let\explanation\relax
+\let\endexplanation\relax
+% \newenvironment{explanation}{\begin{oplossing}}{\end{oplossing}}
+% \newcounter{explanation}
+
+\ifhandout%
+    \NewEnviron{explanation}[1][toon]%
+    {%
+    \RenewEnviron{verbatim}{ \color{red} {VERBATIM CONTENT MISSING IN THIS PDF}} %% \expandafter\verb|\BODY|}
+
+    \ifthenelse{\equal{\detokenize{#1}}{\detokenize{toon}}}
+    {
+    \def\PH@Command{#1}% Use PH@Command to hold the content and be a target for "\expandafter" to expand once.
+
+    \begin{trivlist}% Begin the trivlist to use formating of the "Feedback" label.
+    \item[\hskip \labelsep\small\slshape\bfseries Explanation:% Format the "Feedback" label. Don't forget the space.
+    %(\texttt{\detokenize\expandafter{\PH@Command}}):% Format (and detokenize) the condition for feedback to trigger
+    \hspace{2ex}]\small%\slshape% Insert some space before the actual feedback given.
+    \BODY
+    \end{trivlist}
+    }
+    {  % \begin{feedback}[solution]   \BODY     \end{feedback}  }
+    }
+    }    
+\else
+% ONLY for HTML; xmoplossing is styled with css, and is not, and need not be a LaTeX environment
+% THUS: it does NOT use feedback anymore ...
+%    \NewEnviron{oplossing}{\begin{expandable}{xmoplossing}{\nlen{Toon uitwerking}{Show solution}}{\BODY}\end{expandable}}
+    \newenvironment{explanation}[1][toon]
+   {%
+       \begin{expandable}{xmoplossing}{}
+   }
+   {%
+   	   \end{expandable}
+   } 
+\fi
