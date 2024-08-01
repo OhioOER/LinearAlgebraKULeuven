@@ -10,7 +10,7 @@ variables:
 
 stages:
   - build
-  - deploy
+  - deploy-test
   - deploy-prod
 
 build_pdf_job:
@@ -67,8 +67,8 @@ deploy_job-latest:
   allow_failure: false
   when: manual    
 
-deploy_job:
-  stage: deploy
+deploy_job-test:
+  stage: deploy-test
   script:
       - BRANCHPART=`echo "*$CI_COMMIT_REF_NAME" | tr '[:upper:]' '[:lower:]'` # Add star and lowercase
       - REPO_XIMERA=$REPO_BASE""$BRANCHPART 
@@ -96,5 +96,5 @@ deploy_job_prod:
     untracked: true
     expire_in: '24h20min'
   allow_failure: false
-  when: manual
+  # when: manual
 
